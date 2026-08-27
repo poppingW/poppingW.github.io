@@ -12,124 +12,240 @@
   const idx = dateSeed.split('-').reduce((a, b) => a + parseInt(b), 0) % bgs.length;
   const todayBg = bgs[idx];
 
-  function setBackground(url) {
-    const layer = document.createElement('div');
-    layer.id = 'anime-bg-layer';
-    layer.style.cssText = 'position:fixed;inset:0;z-index:-3;background:center/cover no-repeat;transition:opacity 1.2s ease;opacity:0;';
-    layer.style.backgroundImage = 'url(' + url + ')';
-    document.body.appendChild(layer);
+  const layer = document.createElement('div');
+  layer.id = 'anime-bg-layer';
+  layer.style.cssText = 'position:fixed;inset:0;z-index:-9999;background:center/cover no-repeat;transition:opacity 1.2s ease;opacity:0;';
+  document.body.appendChild(layer);
 
-    const img = new Image();
-    img.onload = function () {
-      layer.style.opacity = '1';
-    };
-    img.onerror = function () {
-      layer.style.background = 'linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 50%, #0f172a 100%)';
-      layer.style.opacity = '1';
-    };
-    img.src = url;
+  const img = new Image();
+  img.onload = function () {
+    layer.style.backgroundImage = 'url(' + todayBg + ')';
+    document.body.style.backgroundImage = 'url(' + todayBg + ')';
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+    document.body.style.backgroundAttachment = 'fixed';
+    document.body.style.backgroundRepeat = 'no-repeat';
+    layer.style.opacity = '1';
+  };
+  img.onerror = function () {
+    layer.style.background = 'linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 50%, #0f172a 100%)';
+    layer.style.opacity = '1';
+  };
+  img.src = todayBg;
+
+  // ===== 工具函数 =====
+  function createCanvas(id, zIndex) {
+    const c = document.createElement('canvas');
+    c.id = id;
+    c.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:' + zIndex + ';';
+    document.body.appendChild(c);
+    return c;
   }
 
-  setBackground(todayBg);
-
-  // ===== 花瓣/粒子飘落特效 =====
-  const canvas = document.createElement('canvas');
-  canvas.id = 'anime-canvas';
-  canvas.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:-1;';
-  document.body.appendChild(canvas);
-
-  const ctx = canvas.getContext('2d');
-  let width, height;
-  const particles = [];
-
-  function resize() {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
+  function resizeCanvas(c) {
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
   }
-  window.addEventListener('resize', resize);
-  resize();
 
-  class Particle {
+  // ===== 代码雨特效 =====
+  const matrixCanvas = createCanvas('matrix-canvas', -2);
+  const mCtx = matrixCanvas.getContext('2d');
+  resizeCanvas(matrixCanvas);
+  window.addEventListener('resize', () => resizeCanvas(matrixCanvas));
+
+  const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const charArr = chars.split('');
+  const fontSize = 14;
+  let columns = Math.floor(matrixCanvas.width / fontSize);
+  const drops = [];
+  for (let i = 0; i < columns; i++) drops[i] = Math.random() * -100;
+
+  function drawMatrix() {
+    mCtx.fillStyle = 'rgba(3, 3, 8, 0.05)';
+    mCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+    mCtx.fillStyle = '#00f0ff';
+    mCtx.font = fontSize + 'px monospace';
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = charArr[Math.floor(Math.random() * charArr.length)];
+      mCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+      if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+    requestAnimationFrame(drawMatrix);
+  }
+  drawMatrix();
+
+  // ===== 花瓣飘落特效 =====
+  const animeCanvas = createCanvas('anime-canvas', -1);
+  const aCtx = animeCanvas.getContext('2d');
+  resizeCanvas(animeCanvas);
+  window.addEventListener('resize', () => resizeCanvas(animeCanvas));
+
+  const petals = [];
+  class Petal {
     constructor() { this.reset(); }
     reset() {
-      this.x = Math.random() * width;
+      this.x = Math.random() * animeCanvas.width;
       this.y = -15;
-      this.size = Math.random() * 5 + 3;
-      this.speedY = Math.random() * 1.2 + 0.4;
-      this.speedX = Math.random() * 1.2 - 0.6;
+      this.size = Math.random() * 4 + 2;
+      this.speedY = Math.random() * 1 + 0.3;
+      this.speedX = Math.random() * 1 - 0.5;
       this.rotation = Math.random() * Math.PI * 2;
-      this.rotationSpeed = (Math.random() - 0.5) * 0.04;
-      this.opacity = Math.random() * 0.45 + 0.25;
-      this.color = ['#ffb7c5', '#b5e7ff', '#e0bbff', '#c7ffd8', '#ffd1a9'][Math.floor(Math.random() * 5)];
+      this.rotationSpeed = (Math.random() - 0.5) * 0.03;
+      this.opacity = Math.random() * 0.3 + 0.15;
+      this.color = ['#ffb7c5', '#b5e7ff', '#e0bbff', '#c7ffd8'][Math.floor(Math.random() * 4)];
     }
     update() {
       this.y += this.speedY;
-      this.x += this.speedX + Math.sin(this.y / 80) * 0.3;
+      this.x += this.speedX + Math.sin(this.y / 80) * 0.2;
       this.rotation += this.rotationSpeed;
-      if (this.y > height + 15) this.reset();
+      if (this.y > animeCanvas.height + 15) this.reset();
     }
     draw() {
-      ctx.save();
-      ctx.translate(this.x, this.y);
-      ctx.rotate(this.rotation);
-      ctx.globalAlpha = this.opacity;
-      ctx.fillStyle = this.color;
-      ctx.beginPath();
-      ctx.ellipse(0, 0, this.size, this.size * 0.55, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
+      aCtx.save();
+      aCtx.translate(this.x, this.y);
+      aCtx.rotate(this.rotation);
+      aCtx.globalAlpha = this.opacity;
+      aCtx.fillStyle = this.color;
+      aCtx.beginPath();
+      aCtx.ellipse(0, 0, this.size, this.size * 0.55, 0, 0, Math.PI * 2);
+      aCtx.fill();
+      aCtx.restore();
     }
   }
-
-  for (let i = 0; i < 55; i++) particles.push(new Particle());
-  function animate() {
-    ctx.clearRect(0, 0, width, height);
-    particles.forEach(p => { p.update(); p.draw(); });
-    requestAnimationFrame(animate);
+  for (let i = 0; i < 35; i++) petals.push(new Petal());
+  function animatePetals() {
+    aCtx.clearRect(0, 0, animeCanvas.width, animeCanvas.height);
+    petals.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animatePetals);
   }
-  animate();
+  animatePetals();
 
-  // ===== 鼠标霓虹轨迹 =====
-  const trailCanvas = document.createElement('canvas');
-  trailCanvas.id = 'mouse-trail';
-  trailCanvas.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:-1;';
-  document.body.appendChild(trailCanvas);
-  const tCtx = trailCanvas.getContext('2d');
-  let tw, th;
-  function resizeTrail() {
-    tw = trailCanvas.width = window.innerWidth;
-    th = trailCanvas.height = window.innerHeight;
-  }
-  window.addEventListener('resize', resizeTrail);
-  resizeTrail();
+  // ===== 光标能量环 =====
+  const ringCanvas = createCanvas('cursor-ring-canvas', 9998);
+  const rCtx = ringCanvas.getContext('2d');
+  resizeCanvas(ringCanvas);
+  window.addEventListener('resize', () => resizeCanvas(ringCanvas));
 
-  const trail = [];
-  let mx = 0, my = 0;
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+  let ringAngle = 0;
+
   document.addEventListener('mousemove', e => {
-    mx = e.clientX;
-    my = e.clientY;
-    trail.push({ x: mx, y: my, life: 1 });
+    mouseX = e.clientX;
+    mouseY = e.clientY;
   });
 
-  function drawTrail() {
-    tCtx.clearRect(0, 0, tw, th);
-    for (let i = trail.length - 1; i >= 0; i--) {
-      const p = trail[i];
-      p.life -= 0.025;
-      if (p.life <= 0) {
-        trail.splice(i, 1);
-        continue;
-      }
-      tCtx.beginPath();
-      tCtx.arc(p.x, p.y, 3 * p.life, 0, Math.PI * 2);
-      tCtx.fillStyle = 'rgba(0, 240, 255, ' + (p.life * 0.6) + ')';
-      tCtx.fill();
-      tCtx.beginPath();
-      tCtx.arc(p.x, p.y, 8 * p.life, 0, Math.PI * 2);
-      tCtx.fillStyle = 'rgba(0, 240, 255, ' + (p.life * 0.15) + ')';
-      tCtx.fill();
-    }
-    requestAnimationFrame(drawTrail);
+  function drawCursorRing() {
+    rCtx.clearRect(0, 0, ringCanvas.width, ringCanvas.height);
+    ringAngle += 0.03;
+
+    // 外环
+    rCtx.save();
+    rCtx.translate(mouseX, mouseY);
+    rCtx.rotate(ringAngle);
+    rCtx.beginPath();
+    rCtx.arc(0, 0, 28, 0, Math.PI * 1.5);
+    rCtx.strokeStyle = 'rgba(0, 240, 255, 0.6)';
+    rCtx.lineWidth = 2;
+    rCtx.shadowColor = '#00f0ff';
+    rCtx.shadowBlur = 15;
+    rCtx.stroke();
+    rCtx.restore();
+
+    // 内环（反向）
+    rCtx.save();
+    rCtx.translate(mouseX, mouseY);
+    rCtx.rotate(-ringAngle * 1.5);
+    rCtx.beginPath();
+    rCtx.arc(0, 0, 18, 0.5, Math.PI * 1.8);
+    rCtx.strokeStyle = 'rgba(255, 42, 127, 0.5)';
+    rCtx.lineWidth = 2;
+    rCtx.shadowColor = '#ff2a7f';
+    rCtx.shadowBlur = 12;
+    rCtx.stroke();
+    rCtx.restore();
+
+    // 中心点
+    rCtx.beginPath();
+    rCtx.arc(mouseX, mouseY, 3, 0, Math.PI * 2);
+    rCtx.fillStyle = '#00f0ff';
+    rCtx.shadowColor = '#00f0ff';
+    rCtx.shadowBlur = 10;
+    rCtx.fill();
+
+    requestAnimationFrame(drawCursorRing);
   }
-  drawTrail();
+  drawCursorRing();
+
+  // ===== 点击爆炸粒子 =====
+  const expCanvas = createCanvas('explosion-canvas', 9997);
+  const eCtx = expCanvas.getContext('2d');
+  resizeCanvas(expCanvas);
+  window.addEventListener('resize', () => resizeCanvas(expCanvas));
+
+  const explosions = [];
+  class Explosion {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+      this.particles = [];
+      const colors = ['#00f0ff', '#ff2a7f', '#b967ff', '#39ff14', '#ffffff'];
+      for (let i = 0; i < 28; i++) {
+        const angle = (Math.PI * 2 / 28) * i + Math.random() * 0.3;
+        const speed = Math.random() * 4 + 2;
+        this.particles.push({
+          x: x, y: y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          life: 1,
+          decay: Math.random() * 0.02 + 0.015,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: Math.random() * 3 + 1
+        });
+      }
+    }
+    update() {
+      for (let i = this.particles.length - 1; i >= 0; i--) {
+        const p = this.particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= 0.96;
+        p.vy *= 0.96;
+        p.life -= p.decay;
+        if (p.life <= 0) this.particles.splice(i, 1);
+      }
+    }
+    draw() {
+      this.particles.forEach(p => {
+        eCtx.globalAlpha = p.life;
+        eCtx.fillStyle = p.color;
+        eCtx.shadowColor = p.color;
+        eCtx.shadowBlur = 10;
+        eCtx.beginPath();
+        eCtx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+        eCtx.fill();
+      });
+      eCtx.globalAlpha = 1;
+      eCtx.shadowBlur = 0;
+    }
+  }
+
+  document.addEventListener('click', e => {
+    explosions.push(new Explosion(e.clientX, e.clientY));
+  });
+
+  function animateExplosions() {
+    eCtx.clearRect(0, 0, expCanvas.width, expCanvas.height);
+    for (let i = explosions.length - 1; i >= 0; i--) {
+      explosions[i].update();
+      explosions[i].draw();
+      if (explosions[i].particles.length === 0) explosions.splice(i, 1);
+    }
+    requestAnimationFrame(animateExplosions);
+  }
+  animateExplosions();
 })();
