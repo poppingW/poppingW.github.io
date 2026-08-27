@@ -1,0 +1,34 @@
+:root {
+  --anime-overlay: rgba(0, 0, 0, 0.35);
+}
+
+body {
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: background-image 1s ease-in-out;
+}
+
+#anime-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+#web_bg {
+  filter: brightness(0.85) saturate(1.1);
+}
+
+.site-name,
+#site-subtitle,
+.nav a,
+.article-title a,
+.recent-post-info a {
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+#footer-wrap {
+  background: rgba(0, 0, 0, 0.4) !important;
+}
