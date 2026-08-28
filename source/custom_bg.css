@@ -1,0 +1,258 @@
+/* ===== 赛博霓虹风全局覆盖 ===== */
+
+#anime-bg-layer {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: -9999 !important;
+  background-position: center !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  transition: opacity 1.2s ease !important;
+}
+
+#web_bg,
+#page-header::before,
+#footer-wrap,
+#body-wrap {
+  background: transparent !important;
+}
+
+#page-header {
+  background: transparent !important;
+  position: relative;
+}
+
+#page-header::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(3,3,8,0.3) 0%, rgba(3,3,8,0.1) 50%, rgba(3,3,8,0.6) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body {
+  background: transparent !important;
+  color: #e8fbff !important;
+}
+
+/* ===== 顶部导航 ===== */
+#nav {
+  background: rgba(3, 3, 8, 0.5) !important;
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+}
+
+#nav .site-name,
+#nav a {
+  color: #e8fbff !important;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+  transition: all 0.2s ease;
+}
+
+#nav a:hover {
+  color: #00f0ff !important;
+  text-shadow: 0 0 15px rgba(0, 240, 255, 0.8);
+}
+
+/* ===== 首页大标题 ===== */
+#site-name,
+#site-title,
+.site-name {
+  color: #ffffff !important;
+  text-shadow: 0 0 20px rgba(0, 240, 255, 0.7), 0 0 40px rgba(0, 240, 255, 0.4) !important;
+  font-weight: 800 !important;
+  letter-spacing: 2px;
+}
+
+#site-subtitle {
+  color: #00f0ff !important;
+  font-family: monospace !important;
+  letter-spacing: 4px;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
+}
+
+#scroll-down {
+  color: #00f0ff !important;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
+}
+
+/* ===== 文章卡片 ===== */
+.recent-post-items,
+.recent-post-item,
+#recent-posts > .recent-post-items,
+#recent-posts .recent-post-items,
+#recent-posts > .recent-post-item,
+#recent-posts .recent-post-item,
+.layout > .recent-post-items,
+.layout > .recent-post-item,
+.article-sort-item,
+#article-container .recent-post-items,
+#article-container .recent-post-item {
+  background: rgba(10, 14, 28, 0.82) !important;
+  backdrop-filter: blur(14px) !important;
+  border: 1px solid rgba(0, 240, 255, 0.22) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.08) !important;
+  transition: all 0.3s ease;
+}
+
+.recent-post-items:hover,
+.recent-post-item:hover,
+#recent-posts > .recent-post-items:hover,
+#recent-posts .recent-post-items:hover,
+#recent-posts > .recent-post-item:hover,
+#recent-posts .recent-post-item:hover,
+.layout > .recent-post-items:hover,
+.layout > .recent-post-item:hover,
+.article-sort-item:hover {
+  background: rgba(15, 20, 40, 0.9) !important;
+  border-color: rgba(0, 240, 255, 0.5) !important;
+  box-shadow: 0 0 35px rgba(0, 240, 255, 0.18), inset 0 0 0 1px rgba(0, 240, 255, 0.12) !important;
+  transform: translateY(-3px);
+}
+
+.recent-post-info,
+.recent-post-info.no-cover,
+.recent-post-items .recent-post-info,
+.recent-post-items .content,
+.recent-post-items .article-meta-wrap,
+.recent-post-item .recent-post-info,
+.recent-post-item .content,
+.recent-post-item .article-meta-wrap {
+  background: transparent !important;
+}
+
+.recent-post-info .article-title,
+.recent-post-info a,
+.article-title a,
+.recent-post-info .content,
+.recent-post-info .content a,
+.article-sort-item .article-title,
+.article-sort-item a {
+  color: #ffffff !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.recent-post-info .article-title:hover,
+.recent-post-info a:hover,
+.article-sort-item .article-title:hover {
+  color: #00f0ff !important;
+  text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+}
+
+.article-meta-wrap,
+.article-meta__links,
+.post-meta-date,
+.post-meta-categories,
+.recent-post-info .article-meta-wrap,
+.recent-post-info .article-meta__tags {
+  color: #a8bdd1 !important;
+}
+
+.recent-post-items .post-meta-date,
+.recent-post-items .post-meta-categories,
+.recent-post-items .article-meta-wrap a,
+.recent-post-item .post-meta-date,
+.recent-post-item .post-meta-categories,
+.recent-post-item .article-meta-wrap a {
+  color: #8da3b6 !important;
+}
+
+/* ===== 侧边栏 ===== */
+#aside-content .card-widget {
+  background: rgba(10, 14, 28, 0.82) !important;
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(0, 240, 255, 0.18) !important;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.06);
+}
+
+#aside-content .card-widget:hover {
+  border-color: rgba(0, 240, 255, 0.35) !important;
+}
+
+#aside-content .card-content,
+#aside-content .author-info__name,
+#aside-content .author-info__description,
+#aside-content a,
+#aside-content .card-tag-cloud a,
+#aside-content .item-headline,
+#aside-content span,
+#aside-content .site-data {
+  color: #e8fbff !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+#aside-content a:hover,
+#aside-content .card-tag-cloud a:hover {
+  color: #00f0ff !important;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+}
+
+#aside-content .author-info__avatar {
+  border: 2px solid #00f0ff;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+}
+
+#aside-content .button--animated {
+  background: rgba(0, 240, 255, 0.12) !important;
+  border: 1px solid rgba(0, 240, 255, 0.4) !important;
+  color: #00f0ff !important;
+}
+
+#aside-content .button--animated:hover {
+  background: rgba(0, 240, 255, 0.25) !important;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+}
+
+/* ===== 分页/页脚 ===== */
+#pagination,
+.pagination,
+#footer-wrap {
+  background: transparent !important;
+  color: #e8fbff !important;
+}
+
+#footer-wrap a {
+  color: #00f0ff !important;
+}
+
+/* ===== 特效画布 ===== */
+#anime-canvas,
+#matrix-canvas,
+#mouse-trail,
+#cursor-ring-canvas,
+#explosion-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+}
+
+#anime-canvas,
+#matrix-canvas {
+  z-index: -1;
+}
+
+/* ===== 公告卡片特殊处理 ===== */
+#aside-content .card-announcement .item-headline,
+#aside-content .card-announcement span {
+  color: #ffffff !important;
+}
+
+/* ===== 按钮/标签 ===== */
+.tags-cloud a,
+.article-meta__tag-list a,
+.post-tags a {
+  background: rgba(0, 240, 255, 0.1) !important;
+  border: 1px solid rgba(0, 240, 255, 0.25) !important;
+  color: #00f0ff !important;
+}
+
+.tags-cloud a:hover,
+.article-meta__tag-list a:hover,
+.post-tags a:hover {
+  background: rgba(0, 240, 255, 0.25) !important;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+}
