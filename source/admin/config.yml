@@ -2,6 +2,7 @@ backend:
   name: github
   repo: poppingW/poppingW.github.io
   branch: main
+  base_url: https://blog-oauth-proxy-theta.vercel.app
 
 media_folder: "source/images"
 public_folder: "/images"
