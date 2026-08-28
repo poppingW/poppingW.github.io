@@ -78,32 +78,65 @@ body {
 }
 
 /* ===== 文章卡片 ===== */
+.recent-post-items,
+.recent-post-item,
+#recent-posts > .recent-post-items,
+#recent-posts .recent-post-items,
 #recent-posts > .recent-post-item,
-.layout > .recent-post-item {
-  background: rgba(10, 14, 28, 0.78) !important;
-  backdrop-filter: blur(14px);
-  border: 1px solid rgba(0, 240, 255, 0.18) !important;
-  border-radius: 16px;
-  box-shadow: 0 0 20px rgba(0, 240, 255, 0.06);
+#recent-posts .recent-post-item,
+.layout > .recent-post-items,
+.layout > .recent-post-item,
+.article-sort-item,
+#article-container .recent-post-items,
+#article-container .recent-post-item {
+  background: rgba(10, 14, 28, 0.82) !important;
+  backdrop-filter: blur(14px) !important;
+  border: 1px solid rgba(0, 240, 255, 0.22) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.08) !important;
   transition: all 0.3s ease;
 }
 
-#recent-posts > .recent-post-item:hover {
-  border-color: rgba(0, 240, 255, 0.45) !important;
-  box-shadow: 0 0 30px rgba(0, 240, 255, 0.15), inset 0 0 0 1px rgba(0, 240, 255, 0.1);
+.recent-post-items:hover,
+.recent-post-item:hover,
+#recent-posts > .recent-post-items:hover,
+#recent-posts .recent-post-items:hover,
+#recent-posts > .recent-post-item:hover,
+#recent-posts .recent-post-item:hover,
+.layout > .recent-post-items:hover,
+.layout > .recent-post-item:hover,
+.article-sort-item:hover {
+  background: rgba(15, 20, 40, 0.9) !important;
+  border-color: rgba(0, 240, 255, 0.5) !important;
+  box-shadow: 0 0 35px rgba(0, 240, 255, 0.18), inset 0 0 0 1px rgba(0, 240, 255, 0.12) !important;
   transform: translateY(-3px);
+}
+
+.recent-post-info,
+.recent-post-info.no-cover,
+.recent-post-items .recent-post-info,
+.recent-post-items .content,
+.recent-post-items .article-meta-wrap,
+.recent-post-item .recent-post-info,
+.recent-post-item .content,
+.recent-post-item .article-meta-wrap {
+  background: transparent !important;
 }
 
 .recent-post-info .article-title,
 .recent-post-info a,
 .article-title a,
-.recent-post-info .content {
+.recent-post-info .content,
+.recent-post-info .content a,
+.article-sort-item .article-title,
+.article-sort-item a {
   color: #ffffff !important;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
 }
 
 .recent-post-info .article-title:hover,
-.recent-post-info a:hover {
+.recent-post-info a:hover,
+.article-sort-item .article-title:hover {
   color: #00f0ff !important;
   text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
 }
@@ -111,7 +144,18 @@ body {
 .article-meta-wrap,
 .article-meta__links,
 .post-meta-date,
-.post-meta-categories {
+.post-meta-categories,
+.recent-post-info .article-meta-wrap,
+.recent-post-info .article-meta__tags {
+  color: #a8bdd1 !important;
+}
+
+.recent-post-items .post-meta-date,
+.recent-post-items .post-meta-categories,
+.recent-post-items .article-meta-wrap a,
+.recent-post-item .post-meta-date,
+.recent-post-item .post-meta-categories,
+.recent-post-item .article-meta-wrap a {
   color: #8da3b6 !important;
 }
 

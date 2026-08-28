@@ -14,17 +14,12 @@
 
   const layer = document.createElement('div');
   layer.id = 'anime-bg-layer';
-  layer.style.cssText = 'position:fixed;inset:0;z-index:-9999;background:center/cover no-repeat;transition:opacity 1.2s ease;opacity:0;';
-  document.body.appendChild(layer);
+  layer.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-9999;background:center/cover no-repeat #030308;transition:opacity 1.2s ease;opacity:0;';
+  document.documentElement.insertBefore(layer, document.documentElement.firstChild);
 
   const img = new Image();
   img.onload = function () {
     layer.style.backgroundImage = 'url(' + todayBg + ')';
-    document.body.style.backgroundImage = 'url(' + todayBg + ')';
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundPosition = 'center';
-    document.body.style.backgroundAttachment = 'fixed';
-    document.body.style.backgroundRepeat = 'no-repeat';
     layer.style.opacity = '1';
   };
   img.onerror = function () {
@@ -32,6 +27,22 @@
     layer.style.opacity = '1';
   };
   img.src = todayBg;
+
+  // 防止其他脚本移除或覆盖壁纸层
+  setInterval(function () {
+    const current = document.getElementById('anime-bg-layer');
+    if (!current) {
+      document.documentElement.insertBefore(layer, document.documentElement.firstChild);
+      return;
+    }
+    if (current.style.backgroundImage !== 'url("' + todayBg + '")' && current.style.backgroundImage !== 'url(' + todayBg + ')') {
+      current.style.backgroundImage = 'url(' + todayBg + ')';
+    }
+    if (current.style.opacity !== '1') current.style.opacity = '1';
+    if (document.body.style.backgroundImage && document.body.style.backgroundImage !== 'none') {
+      document.body.style.backgroundImage = 'none';
+    }
+  }, 2000);
 
   // ===== 工具函数 =====
   function createCanvas(id, zIndex) {
@@ -61,9 +72,8 @@
   for (let i = 0; i < columns; i++) drops[i] = Math.random() * -100;
 
   function drawMatrix() {
-    mCtx.fillStyle = 'rgba(3, 3, 8, 0.05)';
-    mCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
-    mCtx.fillStyle = '#00f0ff';
+    mCtx.clearRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+    mCtx.fillStyle = 'rgba(0, 240, 255, 0.75)';
     mCtx.font = fontSize + 'px monospace';
 
     for (let i = 0; i < drops.length; i++) {
