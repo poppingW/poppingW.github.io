@@ -140,52 +140,64 @@
   resizeCanvas(ringCanvas);
   window.addEventListener('resize', () => resizeCanvas(ringCanvas));
 
-  let mouseX = window.innerWidth / 2;
-  let mouseY = window.innerHeight / 2;
+  let mouseX = -100;
+  let mouseY = -100;
   let ringAngle = 0;
+  let mouseActive = false;
+  let mouseTimeout = null;
 
   document.addEventListener('mousemove', e => {
     mouseX = e.clientX;
     mouseY = e.clientY;
+    mouseActive = true;
+    if (mouseTimeout) clearTimeout(mouseTimeout);
+    mouseTimeout = setTimeout(() => { mouseActive = false; }, 1500);
+  });
+
+  document.addEventListener('mouseleave', () => {
+    mouseActive = false;
   });
 
   function drawCursorRing() {
     rCtx.clearRect(0, 0, ringCanvas.width, ringCanvas.height);
-    ringAngle += 0.03;
 
-    // 外环
-    rCtx.save();
-    rCtx.translate(mouseX, mouseY);
-    rCtx.rotate(ringAngle);
-    rCtx.beginPath();
-    rCtx.arc(0, 0, 28, 0, Math.PI * 1.5);
-    rCtx.strokeStyle = 'rgba(0, 240, 255, 0.6)';
-    rCtx.lineWidth = 2;
-    rCtx.shadowColor = '#00f0ff';
-    rCtx.shadowBlur = 15;
-    rCtx.stroke();
-    rCtx.restore();
+    if (mouseActive) {
+      ringAngle += 0.03;
 
-    // 内环（反向）
-    rCtx.save();
-    rCtx.translate(mouseX, mouseY);
-    rCtx.rotate(-ringAngle * 1.5);
-    rCtx.beginPath();
-    rCtx.arc(0, 0, 18, 0.5, Math.PI * 1.8);
-    rCtx.strokeStyle = 'rgba(255, 42, 127, 0.5)';
-    rCtx.lineWidth = 2;
-    rCtx.shadowColor = '#ff2a7f';
-    rCtx.shadowBlur = 12;
-    rCtx.stroke();
-    rCtx.restore();
+      // 外环
+      rCtx.save();
+      rCtx.translate(mouseX, mouseY);
+      rCtx.rotate(ringAngle);
+      rCtx.beginPath();
+      rCtx.arc(0, 0, 28, 0, Math.PI * 1.5);
+      rCtx.strokeStyle = 'rgba(0, 240, 255, 0.6)';
+      rCtx.lineWidth = 2;
+      rCtx.shadowColor = '#00f0ff';
+      rCtx.shadowBlur = 15;
+      rCtx.stroke();
+      rCtx.restore();
 
-    // 中心点
-    rCtx.beginPath();
-    rCtx.arc(mouseX, mouseY, 3, 0, Math.PI * 2);
-    rCtx.fillStyle = '#00f0ff';
-    rCtx.shadowColor = '#00f0ff';
-    rCtx.shadowBlur = 10;
-    rCtx.fill();
+      // 内环（反向）
+      rCtx.save();
+      rCtx.translate(mouseX, mouseY);
+      rCtx.rotate(-ringAngle * 1.5);
+      rCtx.beginPath();
+      rCtx.arc(0, 0, 18, 0.5, Math.PI * 1.8);
+      rCtx.strokeStyle = 'rgba(255, 42, 127, 0.5)';
+      rCtx.lineWidth = 2;
+      rCtx.shadowColor = '#ff2a7f';
+      rCtx.shadowBlur = 12;
+      rCtx.stroke();
+      rCtx.restore();
+
+      // 中心点
+      rCtx.beginPath();
+      rCtx.arc(mouseX, mouseY, 3, 0, Math.PI * 2);
+      rCtx.fillStyle = '#00f0ff';
+      rCtx.shadowColor = '#00f0ff';
+      rCtx.shadowBlur = 10;
+      rCtx.fill();
+    }
 
     requestAnimationFrame(drawCursorRing);
   }
