@@ -49,7 +49,7 @@
     const c = document.createElement('canvas');
     c.id = id;
     c.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:' + zIndex + ';';
-    document.body.appendChild(c);
+    document.documentElement.appendChild(c);
     return c;
   }
 
