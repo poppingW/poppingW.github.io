@@ -155,14 +155,19 @@
 
     /* ===== 全息展开面板 ===== */
     .holo-toggle {
-      display: inline-flex; align-items: center; gap: 4px; cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between; cursor: pointer;
       background: rgba(0, 240, 255, 0.06); border: 1px solid rgba(0, 240, 255, 0.2);
       color: #00f0ff; font-size: 12px; font-family: monospace; letter-spacing: 1px;
-      padding: 4px 12px; border-radius: 12px; transition: all 0.2s; margin-top: 4px;
+      padding: 6px 14px; border-radius: 10px; transition: all 0.25s; margin-top: 10px;
+      width: 100%; user-select: none;
     }
-    .holo-toggle:hover { background: rgba(0, 240, 255, 0.15); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
-    .holo-toggle .arrow { transition: transform 0.3s; display: inline-block; }
+    .holo-toggle:hover { background: rgba(0, 240, 255, 0.15); border-color: rgba(0, 240, 255, 0.4); box-shadow: 0 0 12px rgba(0, 240, 255, 0.2); }
+    .holo-toggle .left-info { display: flex; align-items: center; gap: 6px; }
+    .holo-toggle .arrow { transition: transform 0.3s; display: inline-block; font-size: 14px; }
     .holo-toggle.open .arrow { transform: rotate(180deg); }
+    .holo-toggle .progress-bar { display: inline-flex; gap: 1px; margin-left: 6px; }
+    .holo-toggle .progress-bar .seg { width: 5px; height: 10px; border-radius: 1px; background: rgba(0, 240, 255, 0.2); }
+    .holo-toggle .progress-bar .seg.done { background: #39ff14; box-shadow: 0 0 4px rgba(57, 255, 20, 0.5); }
 
     .holo-panel {
       max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -515,14 +520,23 @@
             }).join('');
             var doneCount = ev.subtasks.filter(function(s) { return s.done; }).length;
             var totalCount = ev.subtasks.length;
-            var bar = '▰'.repeat(doneCount) + '▱'.repeat(totalCount - doneCount);
+            var pct = Math.round(doneCount / totalCount * 100);
+            var progressSegs = '';
+            for (var si = 0; si < totalCount; si++) {
+              progressSegs += '<span class="seg' + (si < doneCount ? ' done' : '') + '"></span>';
+            }
             subtaskHTML =
-              '<div class="holo-toggle" onclick="this.classList.toggle(\'open\'); var p=this.nextElementSibling; p.classList.toggle(\'open\'); if(p.classList.contains(\'open\')){var ss=p.querySelectorAll(\'.holo-subtask\'); ss.forEach(function(s,i){setTimeout(function(){s.classList.add(\'visible\')},i*150)})}">' +
-                '<span>子任务 ' + doneCount + '/' + totalCount + '</span><span class="arrow">▾</span>' +
+              '<div class="holo-toggle" data-idx="' + visibleIndex + '">' +
+                '<span class="left-info">' +
+                  '<span>▸ 子任务</span>' +
+                  '<span class="progress-bar">' + progressSegs + '</span>' +
+                  '<span>' + doneCount + '/' + totalCount + '</span>' +
+                '</span>' +
+                '<span class="arrow">▾</span>' +
               '</div>' +
               '<div class="holo-panel">' +
                 '<div class="holo-inner">' + stItems +
-                  '<div class="holo-data-bar">' + bar + ' ' + Math.round(doneCount/totalCount*100) + '%</div>' +
+                  '<div class="holo-data-bar">▰'.repeat(doneCount) + '▱'.repeat(totalCount - doneCount) + ' ' + pct + '%</div>' +
                 '</div>' +
               '</div>';
           }
@@ -544,6 +558,25 @@
           container.appendChild(div);
 
           var card = div.querySelector('.timeline-card');
+
+          // 子任务折叠/展开
+          var holoToggle = div.querySelector('.holo-toggle');
+          if (holoToggle) {
+            holoToggle.addEventListener('click', function() {
+              var panel = this.nextElementSibling;
+              var isOpen = panel.classList.toggle('open');
+              this.classList.toggle('open', isOpen);
+              this.querySelector('.left-info').firstChild.textContent = isOpen ? '▾ 子任务' : '▸ 子任务';
+              if (isOpen) {
+                var subs = panel.querySelectorAll('.holo-subtask');
+                subs.forEach(function(s, i) {
+                  s.classList.remove('visible');
+                  setTimeout(function() { s.classList.add('visible'); }, i * 150);
+                });
+              }
+            });
+          }
+
           var observer = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
               if (entry.isIntersecting) {
