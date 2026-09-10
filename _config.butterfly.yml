@@ -18,10 +18,9 @@ nav:
   fixed: false
 
 menu:
-  # Home: / || fas fa-home
-  # List||fas fa-list:
-  #   Music: /music/ || fas fa-music
-  #   Movie: /movies/ || fas fa-video
+  首页: / || fas fa-home
+  大事记: /timeline/ || fas fa-clock
+  JARVIS: /jarvis/ || fas fa-robot
 
 # --------------------------------------
 # Code Blocks Settings
